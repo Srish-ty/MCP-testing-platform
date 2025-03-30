@@ -21,16 +21,44 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [responseWithMCP, setResponseWithMCP] = useState('');
   const [responseWithoutMCP, setResponseWithoutMCP] = useState('');
+  const [error, setError] = useState('');
 
   const handleSubmit = async () => {
     setLoading(true);
+    setError('');
+    
     try {
-      // TODO: Implement API calls to both endpoints
-      // For now, we'll just simulate the responses
-      setResponseWithMCP('Response with MCP context will appear here...');
-      setResponseWithoutMCP('Response without MCP context will appear here...');
+      // For testing purposes, we'll use a fixed userId
+      const userId = 'test-user-1';
+
+      // Make parallel requests to both endpoints
+      const [mcpResponse, directResponse] = await Promise.all([
+        fetch('/api/llm-mcp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt, userId }),
+        }),
+        fetch('/api/llm', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt }),
+        }),
+      ]);
+
+      if (!mcpResponse.ok || !directResponse.ok) {
+        throw new Error('One or more API calls failed');
+      }
+
+      const [mcpData, directData] = await Promise.all([
+        mcpResponse.json(),
+        directResponse.json(),
+      ]);
+
+      setResponseWithMCP(mcpData.response);
+      setResponseWithoutMCP(directData.response);
     } catch (error) {
       console.error('Error:', error);
+      setError('Failed to get responses. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -53,6 +81,11 @@ export default function Home() {
           onChange={(e) => setPrompt(e.target.value)}
           sx={{ mb: 2 }}
         />
+        {error && (
+          <Typography color="error" sx={{ mb: 2 }}>
+            {error}
+          </Typography>
+        )}
         <Button 
           variant="contained" 
           onClick={handleSubmit}
@@ -62,9 +95,8 @@ export default function Home() {
           {loading ? <CircularProgress size={24} /> : 'Submit'}
         </Button>
       </Box>
-
       <Grid container spacing={3}>
-        <Grid item xs={12} md={6}>
+        <Grid xs={12} md={6}>
           <Item>
             <Typography variant="h6" gutterBottom>
               Response with MCP Context
@@ -74,7 +106,7 @@ export default function Home() {
             </Box>
           </Item>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid xs={12} md={6}>
           <Item>
             <Typography variant="h6" gutterBottom>
               Response without MCP Context

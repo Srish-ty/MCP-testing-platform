@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MCP Testing Platform
 
-## Getting Started
+A split-view testing platform that allows you to compare LLM responses with and without MCP (Memory Context Provider) context. This platform helps evaluate the effectiveness of context-aware responses versus direct LLM responses.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Split-view interface showing responses side by side
+- Direct LLM integration with Claude
+- MCP-enhanced responses with context
+- Real-time comparison of responses
+- Error handling and loading states
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Prerequisites
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Node.js 18+ installed
+- Anthropic API key
+- MCP server running locally or accessible via URL
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Setup
 
-## Learn More
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Create a `.env.local` file in the root directory with the following variables:
+   ```
+   ANTHROPIC_API_KEY=your_anthropic_api_key_here
+   MCP_SERVER_URL=http://localhost:3001
+   ```
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+## Usage
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Open your browser and navigate to `http://localhost:3000`
+2. Enter your prompt in the text field
+3. Click "Submit" to get responses from both the direct LLM and MCP-enhanced endpoints
+4. Compare the responses in the split view
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Architecture
 
-## Deploy on Vercel
+- Frontend: Next.js with Material UI
+- LLM: Claude (via Anthropic API)
+- API Routes:
+  - `/api/llm`: Direct LLM calls
+  - `/api/llm-mcp`: MCP-enhanced LLM calls
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Development
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The project uses:
+- TypeScript for type safety
+- Material UI for components
+- Next.js App Router
+- Anthropic SDK for Claude integration
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a new Pull Request

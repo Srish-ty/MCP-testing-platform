@@ -22,7 +22,8 @@ export async function POST(req: Request) {
       messages: [{ role: 'user', content: prompt }],
     });
 
-    return NextResponse.json({ response: message.content[0].text });
+    const response = message.content[0].type === 'text' ? message.content[0].text : '';
+    return NextResponse.json({ response });
   } catch (error) {
     console.error('Error:', error);
     return NextResponse.json(
